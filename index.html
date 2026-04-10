@@ -414,6 +414,30 @@ body {
 .hdr-ryoiki  { background: #5cb87a; }
 .hdr-1g      { background: #5b9bd5; }
 .hdr-2g      { background: #d45a7a; }
+
+.menu-section {
+  border-bottom: 1px solid #f0ede7;
+  padding: 9px 0;
+}
+.menu-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 4px;
+}
+.menu-items {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.8;
+  padding-left: 12px;
+}
+.drink-tag {
+  background: #f5f2ec;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #555;
+}
 </style>
 </head>
 <body>
@@ -460,11 +484,11 @@ body {
 
   <!-- Bottom nav -->
   <div class="bottom-nav">
-    <div class="nav-item active">
+    <div class="nav-item active" id="nav-member" onclick="showTab('member')">
       <span class="nav-icon">🍴</span>
       <span>メンバー</span>
     </div>
-    <div class="nav-item">
+    <div class="nav-item" id="nav-history" onclick="showTab('history')">
       <span class="nav-icon">📋</span>
       <span>履歴</span>
     </div>
@@ -475,6 +499,68 @@ body {
     <div class="nav-item">
       <span class="nav-icon">QR</span>
       <span>QR</span>
+    </div>
+  </div>
+</div>
+
+<!-- 履歴ページ -->
+<div id="historyPage" style="display:none;position:fixed;inset:0;max-width:390px;left:50%;transform:translateX(-50%);background:#f0ede7;z-index:5;overflow-y:auto;padding:0 0 72px;">
+  <div style="background:#fff;border-bottom:1px solid #e8e5df;height:44px;display:flex;align-items:center;justify-content:center;">
+    <span style="font-size:17px;font-weight:700;color:#333;">履歴</span>
+  </div>
+  <div style="padding:16px 16px 0;">
+    <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);overflow:hidden;">
+      <div style="background:#5b9bd5;padding:12px 16px;">
+        <span style="color:#fff;font-size:14px;font-weight:700;">〜ある日の御献立一例〜</span>
+      </div>
+      <div style="padding:16px;">
+        <div class="menu-section">
+          <div class="menu-label">・前菜</div>
+          <div class="menu-items">揚げ胡麻豆腐　帆立南蛮<br>烏賊松前とろろ　合鴨ロース<br>玉子焼き　薩摩揚　蓬麩揚煮<br>近江蒟蒻金平　蛍烏賊時雨煮</div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-label">・温物</div>
+          <div class="menu-items">鯛出汁おでん</div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-label">・造里</div>
+          <div class="menu-items">産直旬鮮魚の造り二種</div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-label">・焼物</div>
+          <div class="menu-items">鰆の梅香焼き</div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-label">・揚物</div>
+          <div class="menu-items">生麩のクリームコロッケ<br>謹製 鶏皮揚げ餃子<br>鮪ハラモ唐揚げ／添え鯛塩</div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-label">・進肴</div>
+          <div class="menu-items">山葵海苔</div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-label">・〆物</div>
+          <div class="menu-items">鯛出汁の〆かけそば</div>
+        </div>
+        <div class="menu-section" style="border-bottom:none;">
+          <div class="menu-label">・茶菓</div>
+          <div class="menu-items">沖縄黒糖アイス<br>自家製黒蜜きなこ</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);overflow:hidden;margin-top:12px;">
+      <div style="background:#f0a030;padding:12px 16px;">
+        <span style="color:#fff;font-size:14px;font-weight:700;">🍺 飲み放題（２時間）</span>
+      </div>
+      <div style="padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;">
+        <span class="drink-tag">ビール</span>
+        <span class="drink-tag">日本酒・おすすめ１銘柄</span>
+        <span class="drink-tag">サワー（レモン・梅酒・その他）</span>
+        <span class="drink-tag">ハイボール</span>
+        <span class="drink-tag">焼酎（芋・麦）</span>
+        <span class="drink-tag">烏龍茶</span>
+      </div>
     </div>
   </div>
 </div>
@@ -1599,6 +1685,25 @@ function doSearch(query) {
       }
     </div>
   `).join('');
+}
+
+// Tab switching
+function showTab(tab) {
+  const historyPage = document.getElementById('historyPage');
+  const contentArea = document.querySelector('.content-area');
+  const navMember = document.getElementById('nav-member');
+  const navHistory = document.getElementById('nav-history');
+  if (tab === 'history') {
+    historyPage.style.display = 'block';
+    contentArea.style.visibility = 'hidden';
+    navMember.classList.remove('active');
+    navHistory.classList.add('active');
+  } else {
+    historyPage.style.display = 'none';
+    contentArea.style.visibility = 'visible';
+    navMember.classList.add('active');
+    navHistory.classList.remove('active');
+  }
 }
 
 // Init
