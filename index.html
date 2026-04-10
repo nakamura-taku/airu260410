@@ -1785,14 +1785,16 @@ function showTab(tab) {
     document.getElementById('nav-airu').classList.add('active');
   } else if (tab === 'comment') {
     const cp = document.getElementById('commentPage');
-    cp.style.display = 'flex';
+    cp.style.display = 'block';
     contentArea.style.visibility = 'hidden';
     document.getElementById('nav-comment').classList.add('active');
+    document.querySelector('.fab').style.display = 'none';
     renderChat();
     setTimeout(() => scrollChatBottom(), 50);
   } else {
     document.getElementById('nav-member').classList.add('active');
   }
+  if (tab !== 'comment') document.querySelector('.fab').style.display = '';
 }
 
 // ===== Chat =====
