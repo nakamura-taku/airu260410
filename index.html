@@ -1466,7 +1466,6 @@ function renderList(group) {
     <div class="member-card" onclick="openMember(${m.id})">
       <div class="member-card-text">
         <div class="member-card-name">${esc(m.name)}</div>
-        <div class="member-card-role">${esc(m.role)}</div>
       </div>
       ${m.small_img
         ? `<img class="member-card-photo" src="${m.small_img}" alt="${esc(m.name)}" loading="lazy">`
@@ -1596,7 +1595,6 @@ function doSearch(query) {
     <div class="member-card" onclick="closeSearch();openMember(${m.id})">
       <div class="member-card-text">
         <div class="member-card-name">${esc(m.name)}</div>
-        <div class="member-card-role">${esc(m.role)}</div>
       </div>
       ${m.small_img
         ? `<img class="member-card-photo" src="${m.small_img}" alt="" loading="lazy">`
