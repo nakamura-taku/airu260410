@@ -496,9 +496,9 @@ body {
       <span class="nav-icon">¥</span>
       <span>お支払い</span>
     </div>
-    <div class="nav-item">
-      <span class="nav-icon">QR</span>
-      <span>QR</span>
+    <div class="nav-item" id="nav-airu" onclick="showTab('airu')">
+      <span class="nav-icon" style="font-size:13px;font-weight:700;">AirU</span>
+      <span>AirU</span>
     </div>
   </div>
 </div>
@@ -561,6 +561,21 @@ body {
         <span class="drink-tag">焼酎（芋・麦）</span>
         <span class="drink-tag">烏龍茶</span>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- AirUページ -->
+<div id="airuPage" style="display:none;position:fixed;inset:0;max-width:390px;left:50%;transform:translateX(-50%);background:#f0ede7;z-index:5;overflow-y:auto;padding:0 0 72px;">
+  <div style="background:#fff;border-bottom:1px solid #e8e5df;height:44px;display:flex;align-items:center;justify-content:center;">
+    <span style="font-size:17px;font-weight:700;color:#333;">AirU</span>
+  </div>
+  <div style="padding:32px 20px;">
+    <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:28px 20px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:16px;">🎉</div>
+      <p style="font-size:16px;font-weight:700;color:#333;line-height:1.8;margin-bottom:12px;">AirプロマネUに配属ありがとう！</p>
+      <p style="font-size:15px;color:#555;line-height:1.8;margin-bottom:20px;">みなさん今年度もお疲れ様でした！</p>
+      <p style="font-size:13px;color:#f0a030;font-weight:700;">by AirU</p>
     </div>
   </div>
 </div>
@@ -1690,19 +1705,30 @@ function doSearch(query) {
 // Tab switching
 function showTab(tab) {
   const historyPage = document.getElementById('historyPage');
+  const airuPage = document.getElementById('airuPage');
   const contentArea = document.querySelector('.content-area');
   const navMember = document.getElementById('nav-member');
-  const navHistory = document.getElementById('nav-course');
+  const navCourse = document.getElementById('nav-course');
+  const navAiru = document.getElementById('nav-airu');
+
+  // 全部隠す
+  historyPage.style.display = 'none';
+  airuPage.style.display = 'none';
+  contentArea.style.visibility = 'visible';
+  navMember.classList.remove('active');
+  navCourse.classList.remove('active');
+  if (navAiru) navAiru.classList.remove('active');
+
   if (tab === 'history') {
     historyPage.style.display = 'block';
     contentArea.style.visibility = 'hidden';
-    navMember.classList.remove('active');
-    navHistory.classList.add('active');
+    navCourse.classList.add('active');
+  } else if (tab === 'airu') {
+    airuPage.style.display = 'block';
+    contentArea.style.visibility = 'hidden';
+    if (navAiru) navAiru.classList.add('active');
   } else {
-    historyPage.style.display = 'none';
-    contentArea.style.visibility = 'visible';
     navMember.classList.add('active');
-    navHistory.classList.remove('active');
   }
 }
 
