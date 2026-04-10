@@ -621,7 +621,10 @@ body {
 
 <!-- Bottom sheet -->
 <div class="bottom-sheet" id="bottomSheet">
-  <div class="sheet-drag-handle"></div>
+  <div style="display:flex;align-items:center;padding:10px 16px 4px;flex-shrink:0;">
+    <div class="sheet-drag-handle" style="margin:0 auto;"></div>
+    <button onclick="closeSheet()" style="position:absolute;right:14px;top:10px;background:none;border:none;font-size:22px;color:#aaa;cursor:pointer;line-height:1;padding:4px;">✕</button>
+  </div>
   <div class="sheet-scroll" id="sheetContent"></div>
 </div>
 
