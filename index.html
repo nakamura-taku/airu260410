@@ -492,9 +492,9 @@ body {
       <span class="nav-icon">📋</span>
       <span>コース</span>
     </div>
-    <div class="nav-item">
-      <span class="nav-icon">¥</span>
-      <span>お支払い</span>
+    <div class="nav-item" id="nav-comment" onclick="showTab('comment')">
+      <span class="nav-icon">💬</span>
+      <span>コメント</span>
     </div>
     <div class="nav-item" id="nav-airu" onclick="showTab('airu')">
       <span class="nav-icon" style="font-size:13px;font-weight:700;">AirU</span>
@@ -577,6 +577,23 @@ body {
       <p style="font-size:15px;color:#555;line-height:1.8;margin-bottom:20px;">みなさん今年度もお疲れ様でした！</p>
       <p style="font-size:13px;color:#f0a030;font-weight:700;">by AirU</p>
     </div>
+  </div>
+</div>
+
+<!-- コメントページ -->
+<div id="commentPage" style="display:none;position:fixed;inset:0;max-width:390px;left:50%;transform:translateX(-50%);background:#f0ede7;z-index:5;display:none;flex-direction:column;">
+  <div style="background:#fff;border-bottom:1px solid #e8e5df;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+    <span style="font-size:17px;font-weight:700;color:#333;">コメント</span>
+  </div>
+  <div id="chatMessages" style="flex:1;overflow-y:auto;padding:12px 12px 8px;-webkit-overflow-scrolling:touch;"></div>
+  <div style="background:#fff;border-top:1px solid #e8e5df;padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:flex-end;flex-shrink:0;">
+    <textarea id="chatInput" placeholder="匿名でコメント…" rows="1"
+      style="flex:1;border:1px solid #ddd;border-radius:20px;padding:8px 14px;font-size:14px;font-family:inherit;outline:none;resize:none;max-height:80px;line-height:1.5;background:#f5f5f5;overflow-y:hidden;"
+      oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+    <button onclick="sendComment()"
+      style="width:36px;height:36px;border-radius:50%;background:#f0a030;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;">
+      ↑
+    </button>
   </div>
 </div>
 
@@ -1704,31 +1721,97 @@ function doSearch(query) {
 
 // Tab switching
 function showTab(tab) {
-  const historyPage = document.getElementById('historyPage');
-  const airuPage = document.getElementById('airuPage');
+  const pages = ['historyPage','airuPage','commentPage'];
+  const navs = ['nav-member','nav-course','nav-airu','nav-comment'];
   const contentArea = document.querySelector('.content-area');
-  const navMember = document.getElementById('nav-member');
-  const navCourse = document.getElementById('nav-course');
-  const navAiru = document.getElementById('nav-airu');
 
-  // 全部隠す
-  historyPage.style.display = 'none';
-  airuPage.style.display = 'none';
+  pages.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
   contentArea.style.visibility = 'visible';
-  navMember.classList.remove('active');
-  navCourse.classList.remove('active');
-  if (navAiru) navAiru.classList.remove('active');
+  navs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
 
   if (tab === 'history') {
-    historyPage.style.display = 'block';
+    document.getElementById('historyPage').style.display = 'block';
     contentArea.style.visibility = 'hidden';
-    navCourse.classList.add('active');
+    document.getElementById('nav-course').classList.add('active');
   } else if (tab === 'airu') {
-    airuPage.style.display = 'block';
+    document.getElementById('airuPage').style.display = 'block';
     contentArea.style.visibility = 'hidden';
-    if (navAiru) navAiru.classList.add('active');
+    document.getElementById('nav-airu').classList.add('active');
+  } else if (tab === 'comment') {
+    const cp = document.getElementById('commentPage');
+    cp.style.display = 'flex';
+    contentArea.style.visibility = 'hidden';
+    document.getElementById('nav-comment').classList.add('active');
+    renderChat();
+    setTimeout(() => scrollChatBottom(), 50);
   } else {
-    navMember.classList.add('active');
+    document.getElementById('nav-member').classList.add('active');
+  }
+}
+
+// ===== Chat =====
+const CHAT_KEY = 'airu260410_comments';
+
+function loadComments() {
+  try { return JSON.parse(localStorage.getItem(CHAT_KEY)) || []; }
+  catch(e) { return []; }
+}
+function saveComments(list) {
+  localStorage.setItem(CHAT_KEY, JSON.stringify(list));
+}
+
+function renderChat() {
+  const list = loadComments();
+  const el = document.getElementById('chatMessages');
+  if (list.length === 0) {
+    el.innerHTML = '<p style="text-align:center;color:#bbb;font-size:13px;padding:24px 0;">まだコメントがありません</p>';
+    return;
+  }
+  el.innerHTML = list.map(c => `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+      <div style="max-width:75%;">
+        <div style="font-size:10px;color:#aaa;text-align:right;margin-bottom:2px;">${esc(c.time)}</div>
+        <div style="background:#f0a030;color:#fff;border-radius:18px 18px 4px 18px;padding:9px 13px;font-size:14px;line-height:1.6;word-break:break-word;white-space:pre-wrap;">${esc(c.text)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function scrollChatBottom() {
+  const el = document.getElementById('chatMessages');
+  el.scrollTop = el.scrollHeight;
+}
+
+function sendComment() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const list = loadComments();
+  const now = new Date();
+  const time = `${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  list.push({ text, time });
+  saveComments(list);
+  input.value = '';
+  input.style.height = 'auto';
+  renderChat();
+  setTimeout(() => scrollChatBottom(), 30);
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendComment();
   }
 }
 
