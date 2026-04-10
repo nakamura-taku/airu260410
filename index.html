@@ -488,9 +488,9 @@ body {
       <span class="nav-icon">🍴</span>
       <span>メンバー</span>
     </div>
-    <div class="nav-item" id="nav-history" onclick="showTab('history')">
+    <div class="nav-item" id="nav-course" onclick="showTab('history')">
       <span class="nav-icon">📋</span>
-      <span>履歴</span>
+      <span>コース</span>
     </div>
     <div class="nav-item">
       <span class="nav-icon">¥</span>
@@ -506,7 +506,7 @@ body {
 <!-- 履歴ページ -->
 <div id="historyPage" style="display:none;position:fixed;inset:0;max-width:390px;left:50%;transform:translateX(-50%);background:#f0ede7;z-index:5;overflow-y:auto;padding:0 0 72px;">
   <div style="background:#fff;border-bottom:1px solid #e8e5df;height:44px;display:flex;align-items:center;justify-content:center;">
-    <span style="font-size:17px;font-weight:700;color:#333;">履歴</span>
+    <span style="font-size:17px;font-weight:700;color:#333;">コース</span>
   </div>
   <div style="padding:16px 16px 0;">
     <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);overflow:hidden;">
@@ -1692,7 +1692,7 @@ function showTab(tab) {
   const historyPage = document.getElementById('historyPage');
   const contentArea = document.querySelector('.content-area');
   const navMember = document.getElementById('nav-member');
-  const navHistory = document.getElementById('nav-history');
+  const navHistory = document.getElementById('nav-course');
   if (tab === 'history') {
     historyPage.style.display = 'block';
     contentArea.style.visibility = 'hidden';
